@@ -1,0 +1,55 @@
+**REQUIRES UPDATION**
+
+Hello there from the Developer!
+
+OPEN THIS TEXT DOCUMENT IN FULLSCREEN SO THAT ENTIRE TEXT IS VISIBLE!
+
+Requirements:
+1. Python 3.7.X
+2. MySQL (Preferably Latest Version)
+3. pip should be installed
+
+First of all, you need to install a particular Python-MySQL connector module.
+Any other version of this particular Python-MySQL connector won't do the work!
+Run the cmd in the Pyhton37 folder as admin.
+execute the following command:
+pip install mysql-connector-python
+
+Now, you need to install the second module: Pillow.
+Run the cmd in the Pyhton37 folder as admin.
+execute the following command:
+pip install pillow
+
+Before operating the LOGNOTE application, you need to do little bit of editing in these files:
+1. for_admin.py
+2. for_students.py
+3. LOGNOTE.py
+4. run_for_first_time_only_once.py
+in IDLE.
+
+Now, open the abovementioned python files in 'Edit with IDLE mode' and open in fullscreen so that the entire code is visible.
+Once opened, you will find '######CHANGE HERE###########' written besides certain lines in the code.
+Those codes are there to establish connection with your MySQL Server.
+You need to change only 3 variables here:
+1. user
+2. passwd
+3. host
+You can find the information about your username, password and host name in MySQL command line.
+DO NOT CHANGE ANYTHING EXTRA!!!
+
+After doing the necessary changes, run the 'run_for_first_time_only_once.py' file.
+Open this file with IDLE to see what it does.
+
+Finally, you're all set to use the application LOGNOTE!
+Open the Python file named LOGNOTE.
+enter username: admin
+enter password: admin
+Perform the necessary operaions.
+
+WARNING: DO NOT CHANGE ANYTHING EXTRA IN THE CODE AS IT MIGHT CAUSE ERRORS AND EVENTUALLY THE PROGRAM WON'T RUN!!!
+
+Have Fun!
+
+Regards,
+Rishabh Raj
+(WhatsApp me if you face any problem)
