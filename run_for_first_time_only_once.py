@@ -7,6 +7,7 @@ import mysql.connector as m
 import time
 user_name = ""
 host_ = ""
+db = ""
 with open('user-pass.txt','r') as f:
     user_pass=f.readlines()
     mysqlpass=user_pass[0][:-1:1]
@@ -16,7 +17,7 @@ con=m.connect(user=user_name,passwd=user_pass,host=host_)
 cur=con.cursor()
 # cur.execute('CREATE DATABASE records;')
 # cur.execute('SHOW DATABASE;')
-cur.execute('USE sql12721293;')
+cur.execute(f'USE {db};')
 cur.execute('CREATE TABLE students\
             (SNo int,\
                 Name varchar(20),\
