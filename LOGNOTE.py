@@ -16,7 +16,7 @@ img=ImageTk.PhotoImage(Image.open('bgimg.png'))
 root.geometry('+400+150')
 root.title('LOGNOTE')
 root.resizable(0,0)
-root.iconbitmap('icon1.ico')
+# root.iconbitmap('icon1.ico')
 
 Label(image=img).grid(row=0,column=0,columnspan=3,rowspan=4)
 
