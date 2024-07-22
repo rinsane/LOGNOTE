@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 # from PIL import ImageTk,Image
-import for_students
+import for_users
 import for_admin
 
 def driverLognote(user_table, con, cur):
@@ -35,7 +35,7 @@ def driverLognote(user_table, con, cur):
                     flag = 1
                     pass_enter.delete(0, END)
                     user_enter.delete(0, END)
-                    for_students.call_students(u, user_table, con, cur, root)
+                    for_users.call_users(u, user_table, con, cur, root)
             if flag == 0:
                 messagebox.showwarning(title='Error!', message='Invalid Username/Password!')  
 

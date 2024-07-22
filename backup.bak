@@ -1,0 +1,281 @@
+from tkinter import *
+import tkinter.ttk as ttk
+from tkinter import messagebox, simpledialog
+import tkinter.simpledialog as simpledialog
+import mysql.connector as myscon
+from datetime import datetime
+from tkinter import simpledialog
+
+def call_users(userName, user_table, con, cur, root):
+    # root.withdraw()
+    root.destroy()
+    splitter = ["✪𓂀₪⚡ཀ"]
+    cur.execute(f"UPDATE {user_table} SET Messages = %s WHERE Username = %s", 
+                (f"348923rbb{splitter[0]}asdklfjasdjfkfsdaj{splitter[0]}reuiyhtiuewr\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}asdfasd{splitter[0]}9283{splitter[0]}4758921374{splitter[0]}348923rbb{splitter[0]}asdklfjasdjfkfsdaj{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}", userName3))
+
+    def logout():
+        win.destroy()
+        # root.deiconify()
+        return
+
+    def editNote():
+        cur.execute(f"SELECT Notes FROM {user_table} WHERE Username = %s", (userName,))
+        note = cur.fetchone()[0]
+        matching = [note]
+        def save_note():
+            new_note = note_text.get("1.0", "end-1c")
+            if matching[0] != new_note:
+                cur.execute(f"UPDATE {user_table} SET Notes = %s WHERE Username = %s", (new_note, userName))
+                con.commit()
+            messagebox.showinfo(title='Note Saved', message='Your note has been updated!')
+            note_win.destroy()
+
+
+        note_win = Toplevel(win)
+        note_win.title('Edit Notes')
+        note_win.geometry('+400+200')
+        note_win.resizable(0, 0)
+        note_win.config(bg='sky blue')
+
+        Label(note_win, text='Your Notes:', font=('Arial', 20, 'bold'), bg='sky blue', fg='dark blue').pack(padx=10, pady=10)
+
+        frame = Frame(note_win)
+        frame.pack(padx=10, pady=10, fill=BOTH, expand=True)
+
+        scrollbar = Scrollbar(frame)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        note_text = Text(frame, wrap='word', yscrollcommand=scrollbar.set, width=50, height=15)
+        note_text.insert('1.0', note if note else '')
+        note_text.pack(side=LEFT, fill=BOTH, expand=True)
+
+        scrollbar.config(command=note_text.yview)
+
+        Button(note_win, text='Save', font=('Arial', 20), command=save_note, width=20, border=5).pack(padx=5, pady=5)
+        Button(note_win, text='Cancel', font=('Arial', 20), command=note_win.destroy, width=20, border=5).pack(padx=5, pady=5)
+
+
+    def sendMessage():
+        def send():
+            recipient = recipient_entry.get().strip()
+            message = message_text.get("1.0", "end-1c").strip()
+            if recipient and message:
+                cur.execute(f"SELECT Username FROM {user_table} WHERE Username = %s", (recipient,))
+                if cur.fetchone():
+                    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    formatted_message = f"[{current_time}]{splitter[0]}{userName}{splitter[0]}{message}{splitter[0]}"
+                    cur.execute(f"UPDATE {user_table} SET Messages = CONCAT(IFNULL(Messages, ''), %s) WHERE Username = %s", 
+                                (formatted_message, recipient))
+                    con.commit()
+                    messagebox.showinfo(title='Message Sent', message='Your message has been sent!')
+                    send_win.destroy()
+                else:
+                    messagebox.showwarning(title='Error!', message='Recipient not found!')
+            else:
+                messagebox.showwarning(title='Error!', message='Please enter both recipient and message!')
+
+        send_win = Toplevel(win)
+        send_win.title('Send Message')
+        send_win.geometry('+400+200')
+        send_win.resizable(0, 0)
+        send_win.config(bg='sky blue')
+
+        Label(send_win, text='Message Composer', font=('Arial', 20, 'bold'), bg='sky blue', fg='dark blue').grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        Label(send_win, text='Recipient Username:', font=('Arial', 14), bg='sky blue', fg='dark blue').grid(row=1, column=0, padx=10, pady=10, sticky=W)
+        recipient_entry = Entry(send_win, font=('Arial', 14), width=30)
+        recipient_entry.grid(row=1, column=1, padx=10, pady=10, sticky=W)
+
+        Label(send_win, text='Message:', font=('Arial', 14), bg='sky blue', fg='dark blue').grid(row=2, column=0, padx=10, pady=10, sticky=NW)
+
+        message_frame = Frame(send_win, bg='sky blue')
+        message_frame.grid(row=2, column=1, padx=10, pady=10, sticky=W)
+
+        message_text = Text(message_frame, wrap='word', font=('Arial', 14), width=30, height=10)
+        message_text.pack(side=LEFT, fill=BOTH, expand=True)
+
+        scrollbar = Scrollbar(message_frame, command=message_text.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        message_text.config(yscrollcommand=scrollbar.set)
+
+        cancel_button = Button(send_win, text='Cancel', font=('Arial', 14), command=send_win.destroy, width=15, border=5, bg='red', activebackground='light coral')
+        cancel_button.grid(row=3, column=0, columnspan=1, padx=10, pady=10, sticky=W)
+
+        send_button = Button(send_win, text='Send Message', font=('Arial', 14), command=send, width=28, border=5, bg='green', activebackground='light green')
+        send_button.grid(row=3, column=1, columnspan=1, padx=10, pady=10, sticky=W)
+
+    def checkInbox():
+        messages_all = [[""]]
+        cachedmessages = [""]
+
+        def closeinbox():
+            updated_messages = ""
+            for item in treeview.get_children():
+                values = treeview.item(item, 'values')
+                if values:
+                    date_time, user, msg = values
+                    updated_messages += f"{date_time}{splitter[0]}{user}{splitter[0]}{msg}{splitter[0]}"
+
+            if (updated_messages != cachedmessages[0]):
+                cur.execute(f"UPDATE {user_table} SET Messages = %s WHERE Username = %s", 
+                            (updated_messages, userName))
+                con.commit()
+                messagebox.showinfo(title='Inbox Closed', message='Changes saved successfully!')
+            
+            inbox_win.destroy()
+
+        def delete_message():
+            selected_item = treeview.selection()
+            if selected_item:
+                treeview.delete(selected_item)
+            else:
+                messagebox.showwarning(title='Error!', message='No message selected for deletion!')
+
+        def populate_inbox():
+            cur.execute(f"SELECT Messages FROM {user_table} WHERE Username = %s", (userName,))
+            cachedmessages[0] = cur.fetchone()[0]
+            messages = cachedmessages[0].split(splitter[0])
+            messages_all[0] = [messages[i:i+3] for i in range(0, len(messages), 3)]
+
+            for msg in messages_all[0]:
+                if len(msg) == 3:
+                    treeview.insert("", "end", values=msg)
+
+        inbox_win = Toplevel(win)
+        inbox_win.title('Inbox')
+        inbox_win.geometry('+400+200')
+        inbox_win.resizable(0, 0)
+        inbox_win.config(bg='sky blue')
+
+        Label(inbox_win, text='Your Inbox', font=('Arial', 20, 'bold'), bg='sky blue', fg='dark blue').grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        columns = ('DateTime', 'Username', 'Message')
+        treeview = ttk.Treeview(inbox_win, columns=columns, show='headings')
+
+        treeview.column('DateTime', width=150, minwidth=150, anchor='w')
+        treeview.column('Username', width=150, minwidth=150, anchor='w')
+        treeview.column('Message', width=500, minwidth=300, anchor='w')
+
+        treeview.heading('DateTime', text='DateTime')
+        treeview.heading('Username', text='Username')
+        treeview.heading('Message', text='Message')
+
+        # vsb = Scrollbar(inbox_win, orient="vertical", command=treeview.yview)
+        # hsb = Scrollbar(inbox_win, orient="horizontal", command=treeview.xview)
+        # treeview.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        treeview.grid(row=1, column=0, columnspan=2)
+        # vsb.grid(row=1, column=2, sticky='ns')
+        # hsb.grid(row=2, column=0, columnspan=2, sticky='ew')
+
+        Button(inbox_win, text='Delete Message', font=('Arial', 15), command=delete_message, width=20, border=5).grid(row=3, column=0, pady=5)
+        Button(inbox_win, text='Close', font=('Arial', 15), command=closeinbox, width=20, border=5).grid(row=3, column=1, pady=5)
+
+        # Configure row and column weights
+        inbox_win.grid_rowconfigure(1, weight=1)
+        inbox_win.grid_columnconfigure(0, weight=1)
+
+        populate_inbox()
+
+    
+    def ch_pass():
+        def change():
+            if e2.get()=='' or e1.get()=='':
+                messagebox.showwarning(title='Error!', message='Please Enter a Password!')
+                return
+
+            cur.execute(f"select Password from {user_table} WHERE Username='{userName}'")
+            rec=cur.fetchall()
+            print(rec)
+            if rec[0][0]==e1.get():
+                if len(e2.get()) < 10:
+                    messagebox.showwarning(title='Error!', message='Password Length should be >= 10!')
+                    return
+                cur.execute(f'update {user_table} set Password=\'{e2.get()}\' where Username=\'{userName}\';')
+                con.commit()
+                messagebox.showinfo(title='Done!', message='Password Changed!')
+                p.destroy()
+            else:
+                messagebox.showwarning(title='Error!', message='Incorrect Old Password!')
+                return
+
+        def toggle_password1():
+            if c1.var.get():
+                e1['show'] = ""
+            else:
+                e1['show'] = "*"
+        def toggle_password2():
+            if c2.var.get():
+                e2['show'] = ""
+            else:
+                e2['show'] = "*"
+        global c1,c2,e1,e2        
+        p=Toplevel(win)
+        p.resizable(0,0)
+        p.geometry('+380+100')
+        Label(p,text='Enter Old Password: ',font=('Arial',20),width=20).grid(row=0,column=0,padx=5,pady=5)
+        e1=Entry(p,font=('Arial',20),width=20)
+        e1.default_show_val=e1['show']
+        e1['show']='*'
+        e1.grid(row=0,column=1,padx=5,pady=5)
+        
+        c1=Checkbutton(p,text='Show Password',onvalue=True,offvalue=False,command=toggle_password1)
+        c1.grid(row=0,column=2)
+        c1.var=BooleanVar(value=False)
+        c1['variable']=c1.var
+        
+
+        Label(p,text='Enter New Password: ',font=('Arial',20),width=20).grid(row=1,column=0,padx=5,pady=5)
+        e2=Entry(p,font=('Arial',20),width=20)
+        e2.default_show_val=e2['show']
+        e2['show']='*'
+        e2.grid(row=1,column=1,padx=5,pady=5)
+        
+        c2=Checkbutton(p,text='Show Password',onvalue=True,offvalue=False,command=toggle_password2)
+        c2.grid(row=1,column=2)
+        c2.var=BooleanVar(value=False)
+        c2['variable']=c2.var
+
+        Button(p,text='Change',font=('Arial',20),command=change,width=20,border=5).grid(row=2,column=0,padx=5,pady=5)
+        Button(p,text='Cancel',font=('Arial',20),command=p.destroy,width=20,border=5).grid(row=2,column=1,padx=5,pady=5)
+
+    win = Tk()
+    win.geometry('+380+210')
+    win.resizable(0,0)
+    win.title(userName)
+    win.config(bg='sky blue')
+
+    Label(win, text='Welcome ' + userName, font=('Times New Roman', 30), bg='sky blue', fg='dark blue').grid(row=0, column=0, columnspan=2)
+    Button(win, text='Make Notes', font=('Arial', 20), bg='green', fg='white', command=editNote, width=20, border=5).grid(row=1, column=0, padx=5, pady=5)
+    Button(win, text='Send Message', font=('Arial', 20), bg='blue', fg='white', command=sendMessage, width=20, border=5).grid(row=1, column=1, padx=5, pady=5)
+    Button(win, text='Check Inbox', font=('Arial', 20), bg='red', fg='white', command=checkInbox, width=20, border=5).grid(row=2, column=0, padx=5, pady=5)
+    Button(win, text='Change Password', font=('Arial', 20), bg='black', fg='white', command=ch_pass, width=20, border=5).grid(row=2, column=1, padx=5, pady=5)
+    Button(win, text='LOG OUT', font=('Arial', 20), bg='red', fg='white', command=logout, width=20, border=5).grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+
+    win.mainloop()
+
+
+
+with open('credentials.txt','r') as f:
+    credentials = f.readlines()
+user_host = credentials[0].rstrip("\n")
+user_port = credentials[1].rstrip("\n")
+user_name = credentials[2].rstrip("\n")
+user_pass = credentials[3].rstrip("\n")
+user_db   = credentials[4].rstrip("\n")
+user_table= credentials[5].rstrip("\n")
+if user_port:
+    con = myscon.connect(user=user_name, passwd=user_pass, host=user_host, port=int(user_port), db=user_db) 
+else:
+    con = myscon.connect(user=user_name, passwd=user_pass, host=user_host, db=user_db) 
+
+cur = con.cursor()
+cur.execute(f"UPDATE {user_table} SET Messages = ''")
+# cur.execute(f"UPDATE {user_table} SET Notes = ''")
+root = Tk()
+userName3 = "testthree@3c"
+userName2 = "testtwo@3c"
+userName1 = "testone@6c"
+call_users(userName3, user_table, con, cur, root)
+root.mainloop()
