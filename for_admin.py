@@ -151,7 +151,7 @@ def call_admin(user_table, con, cur, root):
 
     Label(win,bg='sky blue',fg='dark blue').grid(row=5,column=0)
 
-    add=Button(win,text='ADD STUDENT',font=('Calibri',15),command=add,width=15,border=5)
+    add=Button(win,text='ADD USER',font=('Calibri',15),command=add,width=15,border=5)
     add.grid(row=5,column=0,padx=5,pady=5)
     win.bind('<Return>',lambda event=None: add.invoke())
     Button(win,text='CLEAR FIELDS',font=('Calibri',15),command=clear_fields,width=15,border=5).grid(row=5,column=1,padx=5,pady=5)

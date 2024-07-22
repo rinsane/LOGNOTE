@@ -1,23 +1,17 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter import messagebox, simpledialog
-import tkinter.simpledialog as simpledialog
-import mysql.connector as myscon
+from tkinter import messagebox
 from datetime import datetime
-from tkinter import simpledialog
 
 def call_users(userName, user_table, con, cur, root):
 
 
-    # root.withdraw()
-    root.destroy()
+    root.withdraw()
     splitter = ["✪𓂀₪⚡ཀ"]
-    cur.execute(f"UPDATE {user_table} SET Messages = %s WHERE Username = %s", 
-                (f"348923rbb{splitter[0]}asdklfj{splitter[0]}asdjfkfsdaj{splitter[0]}r\n\\n\n\n\n\n\nn\n\n\n\n\n\n\n\neuiyhtiuewr\nBAU\nBBA\nUB\nA\nU\nB\nA\nU\n\n\nBAUBA\n{splitter[0]}[2024-07-22 22:36:01]{splitter[0]}1234567890{splitter[0]}123456789012345678790@12D{splitter[0]}4758921374\nBAUBBAUBAUBAUBAUBA\n{splitter[0]}", userName3))
 
     def logout():
         win.destroy()
-        # root.deiconify()
+        root.deiconify()
         return
 
     def editNote():
