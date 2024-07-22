@@ -2,24 +2,20 @@ from tkinter import *
 import os
 import mysql.connector as m
 from tkinter import messagebox
-
-with open('user-pass.txt','r') as f:
-    user_pass=f.readlines()
-    mysqlpass=user_pass[0][:-1:1]
-    mysqluser=user_pass[1]
+import LOGNOTE
 
 def create_file(u,p):
-    file=open(os.getcwd()+'\\student_info\\'+u+'.txt','w')
+    file=open(os.getcwd()+'/student_info/'+u+'.txt','w')
     file.write(u+'\n'+p+'\n')
     file.close()
 
 def delete_file(u):
     os.remove(os.getcwd()+'\\student_info\\'+u+'.txt')
 
-def student_gui(u,p,un):
+def call_students(u,p,un):
     def logout():
         win.destroy()
-        import LOGNOTE
+        LOGNOTE.driver()
         
     def make():
         def done1():

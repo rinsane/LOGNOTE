@@ -1,32 +1,26 @@
 from tkinter import *
-import mysql.connector as m
 import tkinter.ttk as ttk
 from tkinter import messagebox
 import for_students
+import LOGNOTE
 
-with open('user-pass.txt','r') as f:
-    user_pass=f.readlines()
-    mysqlpass=user_pass[0][:-1:1]
-    mysqluser=user_pass[1]
+def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, con, cur):
 
-def call_admin():
     global status
-    con=m.connect(user=mysqluser,passwd=mysqlpass,host='localhost',database='records')
-    cur=con.cursor()
 
     win=Tk()
     win.geometry('+150+150')
     win.title('WELCOME ADMIN!')
     win.resizable(0,0)
     win.config(bg='sky blue')
-    win.iconbitmap('icon1.ico')
+    # win.iconbitmap('icon1.ico')
 
 
-    # COMMANDS--------------------------------------------------------------------------------------------------------------------------
+    # COMMANDS
 
     def cancel():
         win.destroy()
-        import LOGNOTE
+        LOGNOTE.driverLognote(user_host, user_port, user_name, user_pass, user_db, user_table, con, cur)
         
     def clear_fields():
         nam.delete(0,END)
@@ -45,47 +39,45 @@ def call_admin():
             status=Label(win,text='STATUS: SELECT CLASS/SECTION.',bg='sky blue',fg='dark blue')
             status.grid(row=1,column=0,sticky=W)
             return
-        con=m.connect(user=mysqluser,passwd=mysqlpass,host='localhost',database='records')
-        cur=con.cursor()
-        cur.execute('select * from students order by class,name')
-        rec=cur.fetchall()
+
         global st_user
         global st_pass
         st_name=(nam.get()).title().strip()
         st_list=st_name.lower().split(' ')
         st_pass=''
+
         for i in st_list:
             st_pass+=i
         st_user=(st_pass+'@'+str(cla.get())+se.get()).lower()
         t=(0,st_name,cla.get(),se.get().title(),st_user,st_pass)
+
         try:
-            cur.execute(f'insert into students values{t}')
+            cur.execute(f'insert into {user_table} values{t}')
+            con.commit()
         except:
             status.destroy()
             status=Label(win,text='STATUS: RECORD ALREADY EXISTS.',bg='sky blue',fg='dark blue')
             status.grid(row=1,column=0,sticky=W)
             return
-        con.commit()
+        
         show_table()
-        con.close()
         status.destroy()
         status=Label(win,text='STATUS: RECORD ADDED.',bg='sky blue',fg='dark blue')
         status.grid(row=1,column=0,sticky=W)
-    # CREATE STUDENT FILE----------------------------------------------------------------------------------------------------------
-        for_students.create_file(st_user,st_pass)
+
+        # CREATE STUDENT FILE
+        # for_students.create_file(st_user,st_pass)
         clear_fields()
         
 
     def show_table():
         tree.delete(*tree.get_children())
-        con=m.connect(user=mysqluser,passwd=mysqlpass,host='localhost',database='records')
-        cur=con.cursor()
-        cur.execute('select * from students order by Class desc, Section desc, Name desc;')
-        rec=cur.fetchall()
-        snum=len(rec)
+        cur.execute(f'select * from {user_table} order by Class desc, Section desc, Name desc;')
+        rec = cur.fetchall()
+        snum = len(rec)
         for i in range(len(rec)):
             tree.insert('',0,text=snum,values=(rec[i][1],rec[i][2],rec[i][3],rec[i][4],rec[i][5]))
-            snum-=1
+            snum -= 1
 
     def delete_record():
         global status
@@ -102,27 +94,22 @@ def call_admin():
             status=Label(win,text='STATUS: SELECT ONE RECORD ONLY.',bg='sky blue',fg='dark blue')
             status.grid(row=1,column=0,sticky=W)
             return
-        con=m.connect(user=mysqluser,passwd=mysqlpass,host='localhost',database='records')
-        cur=con.cursor()
         confirm=messagebox.askquestion("Confirm",f"Are you sure you want to delete the record of {selmon}?")  
         if confirm=='yes':
-            cur.execute(f'delete from students where Username=\'{selmon}\';')
+            cur.execute(f'delete from {user_table} where Username=\'{selmon}\';')
             con.commit()
         else:
             return
-        con.close()
         eee.delete(0,END)
         show_table()
         status.destroy()
         status=Label(win,text='STATUS: RECORD DELETED.',bg='sky blue',fg='dark blue')
         status.grid(row=1,column=0,sticky=W)
-    # CREATE STUDENT FILE----------------------------------------------------------------------------------------------------------
-        for_students.delete_file(selmon)
-        
 
-        
+        # CREATE STUDENT FILE
+        # for_students.delete_file(selmon)
 
-    # TREE---------------------------------------------------------------------------------------------------------------------------
+    # TREE
 
     tree=ttk.Treeview(win)
     tree.grid(row=2,column=3,rowspan=5,columnspan=2,padx=10,pady=10)
@@ -142,8 +129,7 @@ def call_admin():
     tree.heading('Password',text='Password:',anchor=W)
     show_table()
 
-
-    # OBJECTS--------------------------------------------------------------------------------------------------------------------------  
+    # OBJECTS
 
     Label(win,text='THE AIR FORCE SCHOOL',font=('Times New Roman',30),bg='sky blue',fg='dark blue').grid(row=0,column=0,columnspan=5)
     status=Label(win,text='STATUS: None.',bg='sky blue',fg='dark blue')
@@ -171,7 +157,6 @@ def call_admin():
 
     Label(win,bg='sky blue',fg='dark blue').grid(row=5,column=0)
 
-
     add=Button(win,text='ADD STUDENT',font=('Calibri',15),command=add,width=15,border=5)
     add.grid(row=5,column=0,padx=5,pady=5)
     win.bind('<Return>',lambda event=None: add.invoke())
@@ -185,39 +170,5 @@ def call_admin():
 
     Button(win,text='LOG OUT',font=('Calibri',15),command=cancel,width=15,border=5).grid(row=6,column=1,padx=5,pady=5)
 
-    con.close()
-
+    show_table()
     win.mainloop()
-
-    # END--------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
