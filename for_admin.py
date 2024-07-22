@@ -1,11 +1,10 @@
 from tkinter import *
 import tkinter.ttk as ttk
 from tkinter import messagebox
-import for_students
-import LOGNOTE
 
-def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, con, cur):
+def call_admin(user_table, con, cur, root):
 
+    root.withdraw()
     global status
 
     win=Tk()
@@ -15,12 +14,12 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
     win.config(bg='sky blue')
     # win.iconbitmap('icon1.ico')
 
-
     # COMMANDS
 
     def cancel():
         win.destroy()
-        LOGNOTE.driverLognote(user_host, user_port, user_name, user_pass, user_db, user_table, con, cur)
+        root.deiconify()
+        return
         
     def clear_fields():
         nam.delete(0,END)
@@ -49,7 +48,7 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
         for i in st_list:
             st_pass+=i
         st_user=(st_pass+'@'+str(cla.get())+se.get()).lower()
-        t=(0,st_name,cla.get(),se.get().title(),st_user,st_pass)
+        t=(st_name,cla.get(),se.get().title(),st_user,st_pass,"","")
 
         try:
             cur.execute(f'insert into {user_table} values{t}')
@@ -65,18 +64,16 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
         status=Label(win,text='STATUS: RECORD ADDED.',bg='sky blue',fg='dark blue')
         status.grid(row=1,column=0,sticky=W)
 
-        # CREATE STUDENT FILE
-        # for_students.create_file(st_user,st_pass)
         clear_fields()
         
 
     def show_table():
         tree.delete(*tree.get_children())
-        cur.execute(f'select * from {user_table} order by Class desc, Section desc, Name desc;')
+        cur.execute(f'select Name, Class, Section, Username, Password from {user_table} order by Class desc, Section desc, Name desc;')
         rec = cur.fetchall()
         snum = len(rec)
         for i in range(len(rec)):
-            tree.insert('',0,text=snum,values=(rec[i][1],rec[i][2],rec[i][3],rec[i][4],rec[i][5]))
+            tree.insert('',0,text=snum,values=(rec[i][0],rec[i][1],rec[i][2],rec[i][3],rec[i][4]))
             snum -= 1
 
     def delete_record():
@@ -106,9 +103,6 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
         status=Label(win,text='STATUS: RECORD DELETED.',bg='sky blue',fg='dark blue')
         status.grid(row=1,column=0,sticky=W)
 
-        # CREATE STUDENT FILE
-        # for_students.delete_file(selmon)
-
     # TREE
 
     tree=ttk.Treeview(win)
@@ -131,7 +125,7 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
 
     # OBJECTS
 
-    Label(win,text='THE AIR FORCE SCHOOL',font=('Times New Roman',30),bg='sky blue',fg='dark blue').grid(row=0,column=0,columnspan=5)
+    Label(win,text='LOGNOTE ADMIN DASHBOARD',font=('Times New Roman',30),bg='sky blue',fg='dark blue').grid(row=0,column=0,columnspan=5)
     status=Label(win,text='STATUS: None.',bg='sky blue',fg='dark blue')
     status.grid(row=1,column=0,sticky=W)
 
@@ -170,5 +164,4 @@ def call_admin(user_host, user_port, user_name, user_pass, user_db, user_table, 
 
     Button(win,text='LOG OUT',font=('Calibri',15),command=cancel,width=15,border=5).grid(row=6,column=1,padx=5,pady=5)
 
-    show_table()
     win.mainloop()

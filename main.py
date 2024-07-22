@@ -18,7 +18,9 @@ try:
 except FileNotFoundError:
     print("credentials.txt file does not exist!\
           The file has been created.\
-          Enter the credentials:")
+          Enter the credentials:\
+          (You can leave everything blank and also manually edit the credentials.txt file entering the data in the same order)\
+          ")
 
     user_host = input("Enter host: ")
     user_port = input("Enter port (leave blank for default):")
@@ -50,13 +52,15 @@ try:
             sys.exit("Exiting...")
 
     cur.execute(f"USE {user_db}")
+    # cur.execute(f"DROP TABLE {user_table}")
     cur.execute(f'CREATE TABLE {user_table}\
-                (SNo int,\
-                    Name varchar(20),\
-                    Class int,\
-                    Section char(1),\
-                    Username varchar(30) primary key,\
-                    Password varchar(30));')
+                   (Name VARCHAR(20),\
+                    Class INT,\
+                    Section CHAR(1),\
+                    Username VARCHAR(30) primary key,\
+                    Password VARCHAR(30),\
+                    Messages MEDIUMTEXT,\
+                    Notes MEDIUMTEXT);')
     con.commit()
     print('TABLE CREATED!')
 
@@ -68,7 +72,8 @@ except myscon.Error as err:
         print(err)
         sys.exit("Exiting...")
 
-LOGNOTE.driverLognote(user_host, user_port, user_name, user_pass, user_db, user_table, con, cur)
+LOGNOTE.driverLognote(user_table, con, cur)
 con.commit()
 con.close()
+
 print("graceful exit...")
