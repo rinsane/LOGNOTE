@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="images/lognote.png" alt="LOGNOTE Logo" />
+</p>
 # LOGNOTE
 
 LOGNOTE is a Tkinter-based GUI application designed for user management, note-taking, and messaging. This application provides login functionality for both admins and regular users, with different interfaces and features based on the user's role.
