@@ -1,6 +1,6 @@
 # LOGNOTE
 
-LOGNOTE is a Tkinter-based GUI application designed for student management, note-taking, and messaging. This application provides login functionality for both admins and regular users, with different interfaces and features based on the user's role.
+LOGNOTE is a Tkinter-based GUI application designed for user management, note-taking, and messaging. This application provides login functionality for both admins and regular users, with different interfaces and features based on the user's role.
 
 ## Table of Contents
 
@@ -14,12 +14,12 @@ LOGNOTE is a Tkinter-based GUI application designed for student management, note
 
 ## Features
 
-- **User Authentication**: Separate login interfaces for admins and students.
+- **User Authentication**: Separate login interfaces for admins and regular users.
 - **Admin Interface**: 
-  - Add, delete, and view student records.
+  - Add, delete, and view user records.
   - Clear fields and display records in a tree view.
   - Status messages for user feedback.
-- **Student Interface**:
+- **User Interface**:
   - Messaging functionality with an entry box for the message subject.
 - **Database Management**: Handles database creation and table management.
 
@@ -45,15 +45,15 @@ LOGNOTE is a Tkinter-based GUI application designed for student management, note
 
 - **Login**: 
   - Admins can log in using admin credentials.
-  - Students can log in using student credentials.
+  - Regular users can log in using user credentials.
   
 - **Admin Interface**:
-  - **Add Student**: Fill in the student details and click 'Add'.
-  - **Delete Student**: Select a student from the list and click 'Delete'.
-  - **View Students**: Click 'Show Records' to display all student records.
+  - **Add User**: Fill in the user details and click 'Add'.
+  - **Delete User**: Select a user from the list and click 'Delete'.
+  - **View Users**: Click 'Show Records' to display all user records.
   - **Clear Fields**: Click 'Clear' to clear input fields.
 
-- **Student Interface**:
+- **User Interface**:
   - **Messaging**: Enter the subject and message content, then send.
 
 ## File Structure
@@ -61,7 +61,7 @@ LOGNOTE is a Tkinter-based GUI application designed for student management, note
 - **main.py**: The main file that handles database creation and table management.
 - **LOGNOTE.py**: The file that handles user login.
 - **for_admin.py**: Contains the `call_admin` function for the admin interface.
-- **for_students.py**: Handles student-specific functionality.
+- **for_users.py**: Handles user-specific functionality.
 
 ## Contributing
 
