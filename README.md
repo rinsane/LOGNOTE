@@ -31,12 +31,19 @@ LOGNOTE is a Tkinter-based GUI application designed for user management, note-ta
     cd LOGNOTE
     ```
 
-2. **Install the required dependencies**:
+2. **Activate the virtual environment and download the dependencies**:
     ```bash
-    pip install -r requirements.txt
+    chmod +x inint.sh
+    ./init.sh
     ```
+    (for Windows users, just run `init.sh` somehow)
 
-3. **Run the application**:
+3. **Activate the virtual environment**:
+    ```bash
+    source venv/bin/activate
+    ```
+    
+4. **Run the application**:
     ```bash
     python main.py
     ```
